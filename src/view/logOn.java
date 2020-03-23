@@ -8,10 +8,16 @@ package view;
  */
 import java.awt.Font;
 import java.sql.Connection;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Timer;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import dao.LogOnDao;
+import fuction.TimeTrigger;
 import pojo.Admin;
 import pojo.User;
 import pojo.College;
@@ -23,10 +29,10 @@ import util.StringUtil;
  */
 public class logOn extends JFrame {
 	// 表示登录身份
-	private javax.swing.ButtonGroup buttonGroup1;
-	private javax.swing.JLabel jLabel1;
+	private ButtonGroup buttonGroup1;
+	private JLabel jLabel1;
 	// 账号标签
-	private javax.swing.JLabel jLabel2;
+	private JLabel jLabel2;
 	// 密码标签
 	private javax.swing.JLabel jLabel3;
 	private javax.swing.JButton jb_logOn;
@@ -46,6 +52,7 @@ public class logOn extends JFrame {
 	public static User currentUser;
 	// 学院实例
 	public static College currentCollege;
+	public static Admin currentAdmin;
 
 	public logOn() {
 		initComponents();
@@ -117,6 +124,7 @@ public class logOn extends JFrame {
 		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
 				.createSequentialGroup().addGap(100, 100, 100)
 				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING).addComponent(jLabel1)
+
 						.addGroup(layout.createSequentialGroup().addGroup(layout
 								.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 								.addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
@@ -131,6 +139,7 @@ public class logOn extends JFrame {
 												layout.createSequentialGroup().addGroup(layout
 														.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
 														.addComponent(jb_logOn).addComponent(userButton))
+
 														.addGroup(layout
 																.createParallelGroup(
 																		javax.swing.GroupLayout.Alignment.LEADING,
@@ -156,9 +165,10 @@ public class logOn extends JFrame {
 																				javax.swing.GroupLayout.DEFAULT_SIZE,
 																				Short.MAX_VALUE)))))))
 				.addContainerGap(143, Short.MAX_VALUE)));
-		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-						.addContainerGap(77, Short.MAX_VALUE).addComponent(jLabel1).addGap(39, 39, 39)
+		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
+				javax.swing.GroupLayout.Alignment.TRAILING,
+				layout.createSequentialGroup().addContainerGap(77, Short.MAX_VALUE).addComponent(jLabel1)
+						.addGap(39, 39, 39).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
 								.addComponent(jLabel2).addComponent(userNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE,
 										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -168,10 +178,8 @@ public class logOn extends JFrame {
 										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
 						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-								.addComponent(userButton)
-								.addComponent(collegeButton)
-								.addComponent(adminButton)
-								)
+
+								.addComponent(userButton).addComponent(collegeButton).addComponent(adminButton))
 						.addGap(30, 30, 30)
 						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
 								.addComponent(jb_reset).addComponent(jb_logOn))
@@ -203,6 +211,7 @@ public class logOn extends JFrame {
 				currentUser = logOnDao.login(con, user);
 				if (currentUser != null) {
 					this.dispose();
+					//
 					new Main_user().setVisible(true);
 				} else {
 					JOptionPane.showMessageDialog(this, "用户名或密码错误!");
@@ -221,12 +230,15 @@ public class logOn extends JFrame {
 			}
 		} // 防控办登录
 		else if (this.adminButton.isSelected()) {
+			// User user = new User(Integer.parseInt(userName), password);
 			Admin admin = new Admin(Integer.parseInt(userName), password);
 			try {
 				con = dbutil.getCon();
-				Admin currentAdmin = logOnDao.login(con, admin);
+				currentAdmin = logOnDao.login(con, admin);
+				// currentUser = logOnDao.login(con, user);
 				if (currentAdmin != null) {
 					this.dispose();
+
 					new Main_admin().setVisible(true);
 				} else {
 					JOptionPane.showMessageDialog(this, "用户名或密码错误!");
@@ -245,10 +257,10 @@ public class logOn extends JFrame {
 			}
 		} // 学院登录
 		else if (this.collegeButton.isSelected()) {
-			College college = new College(Integer.parseInt(userName), password);
+			College college1 = new College(Integer.parseInt(userName), password);
 			try {
 				con = dbutil.getCon();
-				currentCollege = logOnDao.login(con, college);
+				currentCollege = logOnDao.login(con, college1);
 				if (currentCollege != null) {
 					this.dispose();
 					new Main_college().setVisible(true);
@@ -292,5 +304,48 @@ public class logOn extends JFrame {
 				new logOn().setVisible(true);
 			}
 		});
+	}
+
+	private static final long PERIOD_DAY = 24 * 60 * 60 * 1000;
+
+	private static final long TEST_SEC = 15 * 1000;
+
+	public void timeTig() {
+
+		// 使用默认时区和语言环境获得一个日历
+
+		Calendar calendar = Calendar.getInstance();
+
+		// 设置时间
+
+		calendar.set(Calendar.HOUR_OF_DAY, 9);// 小时
+
+		calendar.set(Calendar.MINUTE, 55);// 分钟
+
+		calendar.set(Calendar.SECOND, 0);// 秒
+
+		// 第一次执行任务的时间
+
+		Date time = calendar.getTime();
+
+		// 如果第一次执行任务的时间早于当前时间，那么第一次执行任务的时间推迟一天
+		if (time.before(new Date())) {
+			time = addDay(time, 1);
+			System.exit(0);
+		}
+		// System.out.println("启动时间:" + time);
+		// 启动计划
+		Timer timer = new Timer();
+		timer.schedule(new TimeTrigger(), time, PERIOD_DAY);
+		// System.out.println("当前时间:" + new Date());
+	}
+
+	// 增加一天
+	public Date addDay(Date date, int num) {
+		JOptionPane.showMessageDialog(null, "错过打卡时间!");
+		Calendar startDT = Calendar.getInstance();
+		startDT.setTime(date);
+		startDT.add(Calendar.DAY_OF_MONTH, num);
+		return startDT.getTime();
 	}
 }

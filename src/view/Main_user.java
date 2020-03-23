@@ -1,24 +1,23 @@
 package view;
-/*
- *  FileName: Main_user.java
- *  师生信息填写界面
- *  @author Lipeishan，ZhangQin
- *  @Date  2020.03.19
+/**
+ * FileName: pieChart.java
+ * 用户功能界面
+ * @author Lipeishan，ZhangQin
+ * @Date  2020.03.20
  */
 import java.sql.Connection;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 import java.util.Calendar;
-
 import java.util.Date;
-
 import java.util.Timer;
-
 
 import dao.UserDao;
 import fuction.TimeTrigger;
 import pojo.User;
+import pojo.userMes;
 import util.Dbutil;
 import util.FloatUtil;
 import util.IntUtil;
@@ -26,30 +25,46 @@ import util.StringUtil;
 
 public class Main_user extends javax.swing.JFrame {
 	// id
-	private javax.swing.JTextField userIDTxt;
+	private JTextField userIDTxt;
 	// 姓名
-	private javax.swing.JTextField userNameTxt;
-	// 性别
-	private javax.swing.JTextField userSexTxt;
+	private JTextField userNameTxt;
+	// b
+	private JTextField userSexTxt;
+	//学院
+	private JTextField userCollegeTxt;
 	// 省份
-	private javax.swing.JTextField userProTxt;
+	private JTextField userProTxt;
 	// 城市
-	private javax.swing.JTextField userCityTxt;
+	private JTextField userCityTxt;
 	// 温度
-	private javax.swing.JTextField userTemperatureTxt;
+	private JTextField userTemperatureTxt;
+	//是否返校
+	private JTextField userArriveTxt;
 	// 是否疑似
-	private javax.swing.JTextField userSymptom;
+	private JTextField userSymptomTxt;
 	// 是否确诊
-	private javax.swing.JTextField userCheck;
-
+	private JTextField userCheckTxt;
+	
+    //id
 	private javax.swing.JLabel jLabel1;
+	//姓名
 	private javax.swing.JLabel jLabel2;
+	//省份
 	private javax.swing.JLabel jLabel3;
+	//城市
 	private javax.swing.JLabel jLabel4;
+	//性别
 	private javax.swing.JLabel jLabel5;
+	//体温
 	private javax.swing.JLabel jLabel6;
+	//疑似
 	private javax.swing.JLabel jLabel7;
+	//确诊
 	private javax.swing.JLabel jLabel8;
+	//学院
+	private javax.swing.JLabel jLabel9;
+	//是否返校
+	private javax.swing.JLabel jLabel10;
 	private javax.swing.JButton jb_reset;
 	private javax.swing.JButton jb_add;
 
@@ -59,9 +74,8 @@ public class Main_user extends javax.swing.JFrame {
 	public Main_user() {
 		initComponents();
 		// this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		this.setSize(600, 300);
+		this.setSize(600, 350);
 		this.setLocationRelativeTo(null);
-		
 	}
 
 	/*
@@ -76,14 +90,18 @@ public class Main_user extends javax.swing.JFrame {
 		jLabel6 = new javax.swing.JLabel();
 		jLabel7 = new javax.swing.JLabel();
 		jLabel8 = new javax.swing.JLabel();
+		jLabel9 = new javax.swing.JLabel();
+		jLabel10 = new javax.swing.JLabel();
 		userIDTxt = new javax.swing.JTextField();
 		userNameTxt = new javax.swing.JTextField();
 		userSexTxt = new javax.swing.JTextField();
 		userProTxt = new javax.swing.JTextField();
 		userCityTxt = new javax.swing.JTextField();
 		userTemperatureTxt = new javax.swing.JTextField();
-		userSymptom = new javax.swing.JTextField();
-		userCheck = new javax.swing.JTextField();
+		userSymptomTxt = new javax.swing.JTextField();
+		userCheckTxt = new javax.swing.JTextField();
+		userArriveTxt = new javax.swing.JTextField();
+		userCollegeTxt  =new javax.swing.JTextField();
 		jb_add = new javax.swing.JButton();
 		jb_reset = new javax.swing.JButton();
 
@@ -96,14 +114,19 @@ public class Main_user extends javax.swing.JFrame {
 		jLabel3.setText("所在省份");
 
 		jLabel4.setText("所在城市 ");
-
-		jLabel5.setText("  性别      ");
+ 
+		jLabel5.setText("   性别      ");
 
 		jLabel6.setText("当日体温 ");
 
-		jLabel7.setText("是否疑似");
+		jLabel7.setText("是否疑似 ");
 
 		jLabel8.setText("是否确诊");
+		
+		jLabel9.setText("  学院       ");
+		
+		jLabel10.setText("是否返校");
+
 
 		jb_add.setText("确认");
 		/*
@@ -135,6 +158,15 @@ public class Main_user extends javax.swing.JFrame {
 								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(
 										userNameTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 144,
 										javax.swing.GroupLayout.PREFERRED_SIZE))
+						
+						.addGroup(layout.createSequentialGroup().addComponent(jLabel9)
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(userCollegeTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 144,
+										javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addGap(60, 60, 60).addComponent(jLabel5)
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(userSexTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 144,
+										javax.swing.GroupLayout.PREFERRED_SIZE))
 
 						.addGroup(layout.createSequentialGroup()
 								.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -151,21 +183,21 @@ public class Main_user extends javax.swing.JFrame {
 														javax.swing.GroupLayout.PREFERRED_SIZE))
 										.addComponent(jb_reset)))
 
-						.addGroup(layout.createSequentialGroup().addComponent(jLabel5)
-								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(userSexTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 144,
-										javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addGap(60, 60, 60).addComponent(jLabel6)
+						.addGroup(layout.createSequentialGroup().addComponent(jLabel6)
 								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 								.addComponent(userTemperatureTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 144,
+										javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addGap(60, 60, 60).addComponent(jLabel10)
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(userArriveTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 144,
 										javax.swing.GroupLayout.PREFERRED_SIZE))
 						.addGroup(layout.createSequentialGroup().addComponent(jLabel7)
 								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(userSymptom, javax.swing.GroupLayout.PREFERRED_SIZE, 144,
+								.addComponent(userSymptomTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 144,
 										javax.swing.GroupLayout.PREFERRED_SIZE)
 								.addGap(60, 60, 60).addComponent(jLabel8)
 								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(userCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 144,
+								.addComponent(userCheckTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 144,
 										javax.swing.GroupLayout.PREFERRED_SIZE)))
 				.addContainerGap(44, Short.MAX_VALUE)));
 		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -178,6 +210,13 @@ public class Main_user extends javax.swing.JFrame {
 										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
 						.addGap(18, 18, 18)
 						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+								.addComponent(jLabel9).addComponent(jLabel5)
+								.addComponent(userCollegeTxt, javax.swing.GroupLayout.PREFERRED_SIZE,
+										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addComponent(userSexTxt, javax.swing.GroupLayout.PREFERRED_SIZE,
+										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+						.addGap(18, 18, 18)
+						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
 								.addComponent(jLabel3).addComponent(jLabel4)
 								.addComponent(userProTxt, javax.swing.GroupLayout.PREFERRED_SIZE,
 										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -185,17 +224,17 @@ public class Main_user extends javax.swing.JFrame {
 										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
 						.addGap(18, 18, 18)
 						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-								.addComponent(jLabel5).addComponent(jLabel6)
-								.addComponent(userSexTxt, javax.swing.GroupLayout.PREFERRED_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addComponent(jLabel6).addComponent(jLabel10)
 								.addComponent(userTemperatureTxt, javax.swing.GroupLayout.PREFERRED_SIZE,
+										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addComponent(userArriveTxt, javax.swing.GroupLayout.PREFERRED_SIZE,
 										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
 						.addGap(18, 18, 18)
 						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
 								.addComponent(jLabel7).addComponent(jLabel8)
-								.addComponent(userSymptom, javax.swing.GroupLayout.PREFERRED_SIZE,
+								.addComponent(userSymptomTxt, javax.swing.GroupLayout.PREFERRED_SIZE,
 										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addComponent(userCheck, javax.swing.GroupLayout.PREFERRED_SIZE,
+								.addComponent(userCheckTxt, javax.swing.GroupLayout.PREFERRED_SIZE,
 										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
 						.addGap(5, 5, 5)
 						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
@@ -217,8 +256,10 @@ public class Main_user extends javax.swing.JFrame {
 		String userTemperature = this.userTemperatureTxt.getText();
 		String userPro = this.userProTxt.getText();
 		String userCity = this.userCityTxt.getText();
-		String userSympotom = this.userSymptom.getText();
-		String userCheck = this.userCheck.getText();
+		String userSympotom = this.userSymptomTxt.getText();
+		String userCheck = this.userCheckTxt.getText();
+		String userCollege = this.userCollegeTxt.getText();
+		String userArrive = this.userCheckTxt.getText();
 		if (StringUtil.isEmpty(userName)) {
 			JOptionPane.showMessageDialog(this, "姓名不能为空!");
 			return;
@@ -252,11 +293,16 @@ public class Main_user extends javax.swing.JFrame {
 			JOptionPane.showMessageDialog(this, "确诊情况不能为空!");
 			return;
 		}
-		java.util.Date curDate = new java.util.Date();
-		java.sql.Date date = new java.sql.Date(curDate.getTime());
-
-		User user = new User(Integer.parseInt(userId), userName, userSex, Float.parseFloat(userTemperature), userPro,
-				userCity, userSympotom, userCheck, date);
+		if (StringUtil.isEmpty(userCollege)) {
+			JOptionPane.showMessageDialog(this, "学院不能为空!");
+			return;
+		}
+		if (StringUtil.isEmpty(userArrive)) {
+			JOptionPane.showMessageDialog(this, "到校情况不能为空!");
+			return;
+		}
+		userMes user = new userMes(Integer.parseInt(userId), userName, userSex,userCollege, userPro,
+				userCity, Float.parseFloat(userTemperature), userArrive,userSympotom, userCheck);
 		Connection con = null;
 		try {
 			con = dbUtil.getCon();
@@ -274,7 +320,6 @@ public class Main_user extends javax.swing.JFrame {
 		}
 
 	}
-
 	/*
 	 * 重置
 	 */
@@ -292,92 +337,9 @@ public class Main_user extends javax.swing.JFrame {
 		this.userTemperatureTxt.setText("");
 		this.userProTxt.setText("");
 		this.userCityTxt.setText("");
-		this.userSymptom.setText("");
-		this.userCheck.setText("");
+		this.userSymptomTxt.setText("");
+		this.userCheckTxt.setText("");
+		this.userArriveTxt.setText("");
+		this.userCollegeTxt.setText("");
 	}
-	private static final long PERIOD_DAY = 24 * 60 * 60 * 1000;
-
-	private static final long TEST_SEC = 15 * 1000;
-	
-	public void timeTig() {
-
-		// 使用默认时区和语言环境获得一个日历
-
-		Calendar calendar = Calendar.getInstance();
-
-		// 设置时间
-
-		calendar.set(Calendar.HOUR_OF_DAY, 9);// 小时
-
-		calendar.set(Calendar.MINUTE, 55);// 分钟
-
-		calendar.set(Calendar.SECOND, 0);// 秒
-
-		// 第一次执行任务的时间
-
-		Date time = calendar.getTime();
-
-		// 如果第一次执行任务的时间早于当前时间，那么第一次执行任务的时间推迟一天
-
-		if (time.before(new Date())) {
-
-			time = addDay(time, 1);
-
-		}
-
-		//System.out.println("启动时间:" + time);
-
-		// 启动计划
-
-		Timer timer = new Timer();
-
-		timer.schedule(new TimeTrigger(), time, PERIOD_DAY);
-
-		//System.out.println("当前时间:" + new Date());
-
-	}
-
- 
-
-	// 增加一天
-
-	public Date addDay(Date date, int num) {
-		JOptionPane.showMessageDialog(null,"错过打卡时间!");
-
-		Calendar startDT = Calendar.getInstance();
-
-		startDT.setTime(date);
-
-		startDT.add(Calendar.DAY_OF_MONTH, num);
-
-		return startDT.getTime();
-
-	}
-
- 
-
-	// 增加一分钟
-
-	public Date addMinute(Date date, int num) {
-
-		System.out.println("增加一分钟");
-
-		Calendar startDT = Calendar.getInstance();
-
-		startDT.setTime(date);
-
-		startDT.add(Calendar.MINUTE, num);
-
-		return startDT.getTime();
-
-	}
-
- 
-	/*
-	public static void main(String[] args) {
-		new Main_user().setVisible(true);
-		new Main_user().timeTig();	
-		}
-	 
-*/
 }

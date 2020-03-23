@@ -1,4 +1,5 @@
 package util;
+
 /**
 
 
@@ -9,14 +10,12 @@ package util;
 * @author Lipeishan Zhangqin
 * @Date    2020.03.19
 
-* @version 1.00
-
 */
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class Dbutil {
-	private static String dbUrl = "jdbc:mysql://localhost:3306/eps_management?useUnicode=true&characterEncoding=utf8";
+	private static String dbUrl = "jdbc:mysql://localhost:3306/mes?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false";
 	private static String dbUserName = "root";
 	private static String dbPassword = ":hksdaPoe3jE";
 	private static String jdbcName = "com.mysql.jdbc.Driver";
@@ -32,6 +31,5 @@ public class Dbutil {
 			con.close();
 		}
 	}
-
 
 }

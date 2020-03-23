@@ -66,7 +66,7 @@ public class Main_college extends javax.swing.JFrame {
 	Dbutil dbUtil = new Dbutil();
 	UserDao userDao = new UserDao();
 
-	/** Creates new form StudentViewInterFrm */
+	/** 创建学院登录界面 */
 	public Main_college() {
 		initComponents();
 		// userCollege=college;
@@ -76,6 +76,11 @@ public class Main_college extends javax.swing.JFrame {
 		this.setLocationRelativeTo(null);
 	}
 
+	/**
+	 * 该学院学生信息
+	 * 
+	 * @param user 实体化用户信息
+	 */
 	private void fillTable(userMes user) {
 		DefaultTableModel dtm = (DefaultTableModel) userTable.getModel();
 		int currentcollegeID = logOn.currentCollege.getID();
@@ -116,7 +121,12 @@ public class Main_college extends javax.swing.JFrame {
 			}
 		}
 	}
-	
+
+	/**
+	 * 显示查询结果
+	 * 
+	 * @param user 实体化用户信息
+	 */
 	private void fillTable1(userMes user) {
 		DefaultTableModel dtm = (DefaultTableModel) userTable.getModel();
 		String currentcollege = logOn.currentCollege.getCollege();
@@ -158,6 +168,7 @@ public class Main_college extends javax.swing.JFrame {
 		}
 	}
 
+	/** 初始化界面 */
 	private void initComponents() {
 
 		jScrollPane1 = new javax.swing.JScrollPane();
@@ -358,10 +369,15 @@ public class Main_college extends javax.swing.JFrame {
 		return user;
 	}
 
+	/**
+	 * 柱状图显示
+	 * 
+	 * @param evt 相应事件
+	 * @throws Exception
+	 */
 	protected void jb_graphActionPerformed(ActionEvent evt) throws Exception {
 		// TODO Auto-generated method stub
 		String userID = this.idTxt.getText();
-		int currentcollegeID = logOn.currentCollege.getID();
 		String userName = this.nameTxt.getText();
 		String userSex = this.sexTxt.getText();
 		String userPro = this.proTxt.getText();
@@ -369,36 +385,52 @@ public class Main_college extends javax.swing.JFrame {
 		String userArrive = this.arriveTxt.getText();
 		String userCheck = this.checkTxt.getText();
 		String date = this.dateTxt.getText();
+		if (StringUtil.isEmpty(userID)) {
+			userID = "-1";
+
+		}
+		if (StringUtil.isEmpty(date)) {
+			date = "-1";
+
+		}
+
 		if (StringUtil.isEmpty(userSex)) {
-			userMes user = new userMes(Integer.parseInt(userID), userName, userSex, userCollege, userPro, userCity,
-					userArrive, userCheck, Integer.parseInt(date));
+			if (StringUtil.isEmpty(userCheck)) {
+				userCheck = "是";
+			}
+			userMes user = new userMes(Integer.parseInt(userID), userName, userSex, userPro, userCity, userArrive,
+					userCheck, Integer.parseInt(date));
 			Connection con = null;
 			con = dbUtil.getCon();
-			//ResultSet rs = userDao.ChartSex(con, user,currentcollegeID);
+			ResultSet rs = userDao.ChartSex(con, user);
 			ChartTest chart = new ChartTest();
-			//chart.getChart1(rs);
+			chart.getChart1(rs);
 		} else {
-			userMes user = new userMes(Integer.parseInt(userID), userName, userSex, userCollege, userPro, userCity,
-					userArrive, userCheck, Integer.parseInt(date));
+			userMes user = new userMes(Integer.parseInt(userID), userName, userSex, userPro, userCity, userArrive,
+					userCheck, Integer.parseInt(date));
 			// userMes user = getUser();
 			Connection con = null;
 			con = dbUtil.getCon();
-			ResultSet rs = userDao.Chart1(con, user);
+			ResultSet rs = userDao.ChartCheck(con, user);
 			ChartTest chart = new ChartTest();
-			chart.getChart1(rs);
+			chart.getChart2(rs);
 		}
 	}
 
+	/**
+	 * 查询功能实现
+	 * 
+	 * @param evt 相应事件
+	 * @throws Exception
+	 */
 	private void jb_searchActionPerformed(java.awt.event.ActionEvent evt) throws Exception {
 		Dbutil.getCon();
-		
+
 		userMes user = getUser();
 		this.fillTable1(user);
 	}
 
-	/*
-	 * 重置
-	 */
+	/** 重置 */
 	private void jb_resetActionPerformed(java.awt.event.ActionEvent evt) {
 		this.resetValue();
 	}

@@ -1,17 +1,41 @@
 package pojo;
 
+/**
+ * FileName: Admin.java
+ * 用户登录实体类
+ * @author Lipeishan，ZhangQin
+ * @Date  2020.03.19
+ */
 import java.sql.Date;
 
 public class User {
+	private int id = -1;
+	private String password;
 
-	public User(int parseInt, String password) {
-		// TODO Auto-generated constructor stub
+	public User() {
+		super();
 	}
 
-	public User(int parseInt, String userName, String userSex, float parseFloat, String userPro, String userCity,
-			String userSympotom, String userCheck, Date date) {
-		// TODO Auto-generated constructor stub
+	public User(int id, String password) {
+		super();
+		this.id = id;
+		this.password = password;
 	}
 
+	public int getID() {
+		return id;
+	}
+
+	public void setID(int id) {
+		this.id = id;
+	}
+
+	public String getSpassword() {
+		return password;
+	}
+
+	public void setSpassword(String password) {
+		this.password = password;
+	}
 
 }

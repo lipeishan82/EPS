@@ -320,6 +320,86 @@ public class Main_user extends javax.swing.JFrame {
 	private void jb_resetActionPerformed(java.awt.event.ActionEvent evt) {
 		this.resetValue();
 	}
+	private static final long PERIOD_DAY = 24 * 60 * 60 * 1000;
+
+	private static final long TEST_SEC = 15 * 1000;
+
+	public static void timeTig() {
+
+		// 使用默认时区和语言环境获得一个日历
+
+		Calendar calendar = Calendar.getInstance();
+
+		// 设置时间
+
+		calendar.set(Calendar.HOUR_OF_DAY, 10);// 小时
+
+		calendar.set(Calendar.MINUTE, 00);// 分钟
+
+		calendar.set(Calendar.SECOND, 0);// 秒
+
+		// 第一次执行任务的时间
+
+		Date time = calendar.getTime();
+
+		// 如果第一次执行任务的时间早于当前时间
+		if (time.before(new Date())) {
+			System.exit(0);
+		}
+		// System.out.println("启动时间:" + time);
+		// 启动计划
+		//Timer timer = new Timer();
+		//timer.schedule(new TimeTrigger(), time, PERIOD_DAY);
+		// System.out.println("当前时间:" + new Date());
+	}
+
+	// 增加一分钟
+
+	public Date addMinute(Date date, int num) {
+
+		System.out.println("增加一分钟");
+
+		Calendar startDT = Calendar.getInstance();
+
+		startDT.setTime(date);
+
+		startDT.add(Calendar.MINUTE, num);
+
+		return startDT.getTime();
+
+	}
+	public void timeTigAlarm() {
+
+		// 使用默认时区和语言环境获得一个日历
+
+		Calendar calendar = Calendar.getInstance();
+
+		// 设置时间
+
+		calendar.set(Calendar.HOUR_OF_DAY, 9);// 小时
+
+		calendar.set(Calendar.MINUTE, 55);// 分钟
+
+		calendar.set(Calendar.SECOND, 0);// 秒
+
+		// 第一次执行任务的时间
+
+		Date time = calendar.getTime();
+
+		// 如果第一次执行任务的时间早于当前时间，那么第一次执行任务的时间推迟一天
+
+		//System.out.println("启动时间:" + time);
+
+		// 启动计划
+
+		Timer timer = new Timer();
+
+		timer.schedule(new TimeTrigger(), time, PERIOD_DAY);
+
+		//System.out.println("当前时间:" + new Date());
+
+	}
+
 
 	/** 重置清空*/
 	private void resetValue() {
@@ -334,4 +414,6 @@ public class Main_user extends javax.swing.JFrame {
 		this.userArriveTxt.setText("");
 		this.userCollegeTxt.setText("");
 	}
+	
+
 }
